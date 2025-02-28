@@ -8,6 +8,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -21,8 +22,13 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    ofImage* images1 = nullptr;
+    ofImage* images2 = nullptr;
+    ofImage* images3 = nullptr;
+    int numImages1 = 0, numImages2 = 0, numImages3 = 0;
 
-    vector<ofImage> images1, images2, images3;
+    ofImage mascara;
+    //vector<ofImage> images1, images2, images3;
     int currentFrameIndex1, currentFrameIndex2, currentFrameIndex3;
     int frameRate;
     int frameDuration1,frameDuration2,frameDuration3;
@@ -31,21 +37,23 @@ public:
     ofTrueTypeFont myfont;
 
     bool showDebug = false;
+    void freeImages(ofImage*& images, int numImages);
 
-    void loadImagesFromFolder(const string& folderPath, vector<ofImage>& images) {
+    void loadImagesFromFolder(const string& folderPath, ofImage*& images, int& numImages){
         ofDirectory dir(folderPath);
         dir.allowExt("png");
         dir.allowExt("jpg");
         dir.listDir();
         dir.sort();
 
-        for (int i = 0; i < dir.size(); i++) {
-            ofImage img;
-//            ofLog()<<folderPath<<" :"<<i<<endl;
-          ofLog()<<dir.getPath(i)<<endl;
-            img.load(dir.getPath(i));
-            images.push_back(img);
+        numImages = dir.size();
+        images = new ofImage[numImages]; // Asignar memoria para el array
+
+        for (int i = 0; i < numImages; i++) {
+            images[i].load(dir.getPath(i));
+            ofLog() << dir.getPath(i) << endl;
         }
+
     }
 
     void updateFrame(int& currentFrameIndex, int totalFrames, int& direction) {
