@@ -8,14 +8,14 @@ void ofApp::setup(){
     ofSetWindowTitle("Video Frames Player");
     // Cargar imágenes desde las carpetas
     loadImagesFromFolder("img1", images1, numImages1);
-      loadImagesFromFolder("img2", images2, numImages2);
-      loadImagesFromFolder("img3", images3, numImages3);
+    loadImagesFromFolder("img2", images2, numImages2);
+    loadImagesFromFolder("img3", images3, numImages3);
 
     // Inicializar variables
     currentFrameIndex1 = 0;
     currentFrameIndex2 = 0;
     currentFrameIndex3 = 0;
-    frameRate = 3; // Framerate deseado
+    frameRate = 30; // Framerate deseado
     //esto individualizarlo y los timmers lo mismo
     frameDuration1 = 1000 / frameRate; // Duración de cada frame en ms
     lastFrameTime1 = ofGetElapsedTimeMillis();
@@ -27,12 +27,15 @@ void ofApp::setup(){
     myfont.load("arial.ttf", 32);
 
     mascara.load("data/mascara_hd_rotada.png");
+    loadSettingsFromXML("settings.xml");
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     uint64_t currentTime = ofGetElapsedTimeMillis();
 
+    autorun();
     // Cambiar frames según el tiempo y la dirección
     if (currentTime - lastFrameTime1 >= frameDuration1) {
         updateFrame(currentFrameIndex1, numImages1, direction1);
@@ -52,26 +55,31 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
 
+    h=   images1[currentFrameIndex1].getHeight();
+    h*= scale;
+    w =   images1[currentFrameIndex1].getWidth();
+    w*= scale;
     // Dibujar las imágenes en la pantalla
-     if (images1 != nullptr) {
-         images1[currentFrameIndex1].draw(0, 0, ofGetWidth() / 3, ofGetHeight());
-     }
-     if (images2 != nullptr) {
-         images2[currentFrameIndex2].draw(ofGetWidth() / 3, 0, ofGetWidth() / 3, ofGetHeight());
-     }
-     if (images3 != nullptr) {
-         images3[currentFrameIndex3].draw(2 * ofGetWidth() / 3, 0, ofGetWidth() / 3, ofGetHeight());
-     }
+    if (images1 != nullptr) {
+
+        images1[currentFrameIndex1].draw(posX, posY, w, h);
+    }
+    if (images2 != nullptr) {
+        images2[currentFrameIndex2].draw(posX+w+gap, posY,  w, h);
+    }
+    if (images3 != nullptr) {
+        images3[currentFrameIndex3].draw(posX+w*2.+gap*2., posY, w, h);
+    }
 
     if(showDebug){
-    myfont.drawString(to_string(frameDuration3), 3*204.,ofGetHeight()/2-100.);
-    myfont.drawString(to_string(frameDuration2), 2.*204,ofGetHeight()/2.-100);
-    myfont.drawString(to_string(frameDuration1), 204 ,ofGetHeight()/2.-100);
+        myfont.drawString(to_string(frameDuration3), 3*204.,ofGetHeight()/2-100.);
+        myfont.drawString(to_string(frameDuration2), 2.*204,ofGetHeight()/2.-100);
+        myfont.drawString(to_string(frameDuration1), 204 ,ofGetHeight()/2.-100);
 
-    myfont.drawString(to_string(currentFrameIndex3), 3*204.,ofGetHeight()/2.);
-    myfont.drawString(to_string(currentFrameIndex2), 2.*204,ofGetHeight()/2.);
-    myfont.drawString(to_string(currentFrameIndex1), 204 ,ofGetHeight()/2.);
-}else mascara.draw(0,0);
+        myfont.drawString(to_string(currentFrameIndex3), 3*204.,ofGetHeight()/2.);
+        myfont.drawString(to_string(currentFrameIndex2), 2.*204,ofGetHeight()/2.);
+        myfont.drawString(to_string(currentFrameIndex1), 204 ,ofGetHeight()/2.);
+    }else mascara.draw(0,0);
 }
 
 //--------------------------------------------------------------
@@ -90,37 +98,51 @@ void ofApp::keyPressed(int key){
         direction3 *= -1;
     }
     if (key =='a' || key =='A') {
-
-        frameDuration1--; // Duración de cada frame en ms
-        if(frameDuration1<1)frameDuration1=1;
+        posX--;
 
     }
     if (key =='q' || key =='Q') {
-        frameDuration1++; // Duración de cada frame en ms
-        if(frameDuration1>1000)frameDuration1=1000;
+        // frameDuration1++; // Duración de cada frame en ms
+        //if(frameDuration1>1000)frameDuration1=1000;
+        scale-=0.01;
+        if(scale<0.0)scale=.01;
+
     }
 
     if (key =='s' || key =='S') {
 
-        frameDuration2--; // Duración de cada frame en ms
-        if(frameDuration2<1)frameDuration2=1;
-
+        posY++;
     }
     if (key =='w' || key =='W') {
-        frameDuration2++; // Duración de cada frame en ms
-        if(frameDuration2>1000)frameDuration2=1000;
+        posY--;
+
     }
 
     if (key =='d' || key =='D') {
-
-        frameDuration3--; // Duración de cada frame en ms
-        if(frameDuration3<1)frameDuration3=1;
-
+        posX++;
     }
     if (key =='e' || key =='E') {
-        frameDuration3++; // Duración de cada frame en ms
-        if(frameDuration3>1000)frameDuration3=1000;
+        scale+=0.01;
+        //if(scale>.0)scale=1.0;
+
     }
+    if (key =='R' || key =='r') {
+        gap++;
+
+    }
+    if (key =='F' || key =='f') {
+        gap--;
+
+    }
+
+
+    ofLog()<<"posX: "<<posX<<endl;
+    ofLog()<<"posY: "<<posY<<endl;
+    ofLog()<<"gap: "<<gap<<endl;
+    ofLog()<<"scale: "<<scale<<endl;
+    ofLog()<<"w: "<<w<<endl;
+    ofLog()<<"h: "<<h<<endl;
+    saveSettingsToXML("settings.xml");
 
 
 }
