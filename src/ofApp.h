@@ -34,6 +34,17 @@ public:
     float posY = 105 ;
     float gap = 104;//distancia entre imgs
     float h, w;
+
+    int videoSelect=0;
+    //config direcccion;
+    float velD1, velD2, velD3 ; //velocidad para cambios de direccion
+    float umbral1, umbral2, umbral3;
+
+    float vel1, vel2 ,vel3;
+    int bias1,bias2 ,bias3 = 42;
+    int amp1,amp2,amp3=30;
+    float peso1,peso2,peso3=0.5;
+
     ofImage mascara;
     //vector<ofImage> images1, images2, images3;
     int currentFrameIndex1, currentFrameIndex2, currentFrameIndex3;
@@ -137,8 +148,8 @@ public:
         int amp=30;
         float peso=0.5;
         t =ofGetElapsedTimeMillis()*0.001; //
-        frameDuration1 = ((sin(t +sin(t*0.005)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
-        frameDuration2 = ((sin(t *sin(t)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
+       // frameDuration1 = ((sin(t +sin(t*0.005)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
+     //   frameDuration2 = ((sin(t *sin(t)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
         frameDuration3 = ((sin(t )*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
     }
 };

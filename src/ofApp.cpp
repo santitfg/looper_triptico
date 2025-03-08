@@ -79,6 +79,17 @@ void ofApp::draw(){
         myfont.drawString(to_string(currentFrameIndex3), 3*204.,ofGetHeight()/2.);
         myfont.drawString(to_string(currentFrameIndex2), 2.*204,ofGetHeight()/2.);
         myfont.drawString(to_string(currentFrameIndex1), 204 ,ofGetHeight()/2.);
+        ofPushStyle();
+        ofNoFill();
+        ofSetColor(0,255.,0);
+        if(videoSelect==1){
+          ofDrawRectangle(posX, posY, w, h);
+        }else  if(videoSelect==2){
+            ofDrawRectangle(posX+w+gap, posY, w, h);
+          }else  if(videoSelect==3){
+            ofDrawRectangle(posX+w*2.+gap*2., posY, w, h);
+         }
+        ofPopStyle();
     }else mascara.draw(0,0);
 }
 
@@ -88,14 +99,18 @@ void ofApp::keyPressed(int key){
 
     if( key == OF_KEY_BACKSPACE || key == OF_KEY_RETURN) showDebug= !showDebug;
 
+    if (key == '0') {
+      //  direction1 *= -1;
+    videoSelect=0;
+    }
     if (key == '1') {
-        direction1 *= -1;
+    videoSelect=1;
     }
     if (key == '2') {
-        direction2 *= -1;
+        videoSelect=2;
     }
     if (key == '3') {
-        direction3 *= -1;
+        videoSelect=3;
     }
     if (key =='a' || key =='A') {
         posX--;
@@ -142,6 +157,7 @@ void ofApp::keyPressed(int key){
     ofLog()<<"scale: "<<scale<<endl;
     ofLog()<<"w: "<<w<<endl;
     ofLog()<<"h: "<<h<<endl;
+    ofLog()<<"videoSelect: "<<videoSelect<<endl;
     saveSettingsToXML("settings.xml");
 
 
