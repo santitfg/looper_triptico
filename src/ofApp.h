@@ -37,13 +37,13 @@ public:
 
     int videoSelect=0;
     //config direcccion;
-    float velD1, velD2, velD3 ; //velocidad para cambios de direccion
-    float umbral1, umbral2, umbral3;
+    float velD1=0.001, velD2=0.001, velD3=0.001 ; //velocidad para cambios de direccion
+    float umbral1=0.5, umbral2=0.5, umbral3=0.5;
 
-    float vel1, vel2 ,vel3;
-    int bias1,bias2 ,bias3 = 42;
-    int amp1,amp2,amp3=30;
-    float peso1,peso2,peso3=0.5;
+    float vel1=0.001, vel2=0.001 ,vel3=0.001;
+    int bias1= 42,bias2= 42 ,bias3 = 42;
+    int amp1=30,amp2=30,amp3=30;
+    float peso1=0.5,peso2=0.5,peso3=0.5;
 
     ofImage mascara;
     //vector<ofImage> images1, images2, images3;
@@ -100,6 +100,28 @@ public:
         xml.addValue("height", h);
         xml.addValue("width", w);
 
+        //vel 1
+        xml.addValue("vel1", vel1);
+        xml.addValue("bias1", bias1);
+        xml.addValue("amp1", amp1);
+        xml.addValue("peso1", peso1);
+        xml.addValue("velD1",velD1);
+        xml.addValue("umbral1", umbral1);
+        //vel 2
+        xml.addValue("vel2", vel2);
+        xml.addValue("bias2", bias2);
+        xml.addValue("amp2", amp2);
+        xml.addValue("peso2", peso2);
+        xml.addValue("velD2", velD2);
+        xml.addValue("umbral2", umbral2);
+        //vel 3
+        xml.addValue("vel3", vel3);
+        xml.addValue("bias3", bias3);
+        xml.addValue("amp3", amp3);
+        xml.addValue("peso3", peso3);
+        xml.addValue("velD3", velD3);
+        xml.addValue("umbral3", umbral3);
+
         // Guardar el archivo XML
         if (xml.saveFile(filename)) {
             ofLogNotice() << "Settings saved to " << filename;
@@ -125,6 +147,30 @@ public:
                 h = xml.getValue("height", 0.0);    // Valor por defecto 0.0
                 w = xml.getValue("width", 0.0);     // Valor por defecto 0.0
 
+
+                // Lectura para vel 1
+                vel1 = xml.getValue("vel1",0.001);
+                bias1 = xml.getValue("bias1",42);
+                amp1 = xml.getValue("amp1",30);
+                peso1 = xml.getValue("peso1",0.5);
+                velD1 = xml.getValue("velD1",0.001);
+                umbral1 = xml.getValue("umbral1",0.5);
+
+                // Lectura para vel 2
+                vel2 = xml.getValue("vel2",0.001);
+                bias2 = xml.getValue("bias2",42);
+                amp2 = xml.getValue("amp2",30);
+                peso2 = xml.getValue("peso2",0.5);
+                velD2 = xml.getValue("velD2",0.001);
+                umbral2 = xml.getValue("umbral2",0.5);
+
+                // Lectura para vel 3
+                vel3 = xml.getValue("vel3",0.001);
+                bias3 = xml.getValue("bias3",42);
+                amp3 = xml.getValue("amp3",30);
+                peso3 = xml.getValue("peso3",0.5);
+                velD3 = xml.getValue("velD3",0.001);
+                umbral3 = xml.getValue("umbral3",0.5);
                 xml.popTag(); // Salir del nodo "settings"
 
                 ofLogNotice() << "Settings loaded from " << filename;
@@ -137,19 +183,20 @@ public:
     }
 
     void autorun(){
-        float vel=0.001;// 1 seg/1micro
-       float  umbral =0.5;
-       float t =ofGetElapsedTimeMillis()*vel; // o  double o realizar la conversion en la func
-        direction1= (ofNoise(t)>=umbral) ?1:-1;
-        direction2= (ofNoise(t)>=umbral) ?1:-1;
-        direction3= (ofNoise(t)>=umbral) ?1:-1;
 
-        int bias= 42;
-        int amp=30;
-        float peso=0.5;
-        t =ofGetElapsedTimeMillis()*0.001; //
-       // frameDuration1 = ((sin(t +sin(t*0.005)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
-     //   frameDuration2 = ((sin(t *sin(t)))*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
-        frameDuration3 = ((sin(t )*0.5+0.5)*peso + (1.0-peso)*ofNoise(t))*amp+bias;
+        float td1 =ofGetElapsedTimeMillis()*velD1;
+        float td2 =ofGetElapsedTimeMillis()*velD2;
+        float td3 =ofGetElapsedTimeMillis()*velD3;
+        direction1= (ofNoise(td1)>=umbral1) ?1:-1;
+        direction2= (ofNoise(td2)>=umbral2) ?1:-1;
+        direction3= (ofNoise(td3)>=umbral3) ?1:-1;
+
+        float t1 =ofGetElapsedTimeMillis()*vel1;
+        float t2 =ofGetElapsedTimeMillis()*vel2;
+        float t3 =ofGetElapsedTimeMillis()*vel3;
+
+        frameDuration1 = ((sin(t1 )*0.5+0.5)*peso1 + (1.0-peso1)*ofNoise(t1))*amp1+bias1;
+        frameDuration2 = ((sin(t2 )*0.5+0.5)*peso2 + (1.0-peso2)*ofNoise(t2))*amp2+bias2;
+        frameDuration3 = ((sin(t3 )*0.5+0.5)*peso3 + (1.0-peso3)*ofNoise(t3))*amp3+bias3;
     }
 };

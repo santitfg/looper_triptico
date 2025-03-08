@@ -72,6 +72,32 @@ void ofApp::draw(){
     }
 
     if(showDebug){
+        int  bias,amp;
+        float vel,peso;
+        float velD, umbral;
+        if(videoSelect==1){
+            vel=vel1, bias=bias1, amp=amp1, peso=peso1, velD=velD1, umbral=umbral1;
+        }else if(videoSelect==2){
+            vel=vel2, bias=bias2, amp=amp2, peso=peso2, velD=velD2, umbral=umbral2;
+        }else if(videoSelect==3){
+            vel=vel3; bias=bias3, amp=amp3, peso=peso3, velD=velD3, umbral=umbral3;
+        }
+
+        myfont.drawString("umbral (n m): "+to_string(umbral),50.,ofGetHeight()-100.);
+        myfont.drawString("velD (o l): "+to_string(velD),50.,ofGetHeight()-150.);
+        myfont.drawString("peso (i k): "+to_string(peso),50.,ofGetHeight()-200.);
+        myfont.drawString("amp (u h): "+to_string(amp),50.,ofGetHeight()-250.);
+        myfont.drawString("bias (t g): "+to_string(bias),50.,ofGetHeight()-300.);
+        myfont.drawString("vel (u j): "+to_string(vel),50.,ofGetHeight()-350.);
+
+      //  myfont.drawString(to_string(frameDuration1), posX, posY-10);
+       // myfont.drawString(to_string(frameDuration2),posX+w+gap, posY-10);
+        //yfont.drawString(to_string(frameDuration3), posX+w*2.+gap*2. , posY-10);
+        myfont.drawString(to_string(currentFrameIndex1), posX, posY-15.);
+        myfont.drawString(to_string(currentFrameIndex2),posX+w+gap, posY-15);
+        myfont.drawString(to_string(currentFrameIndex3), posX+w*2.+gap*2. , posY-15);
+
+    /*
         myfont.drawString(to_string(frameDuration3), 3*204.,ofGetHeight()/2-100.);
         myfont.drawString(to_string(frameDuration2), 2.*204,ofGetHeight()/2.-100);
         myfont.drawString(to_string(frameDuration1), 204 ,ofGetHeight()/2.-100);
@@ -79,16 +105,17 @@ void ofApp::draw(){
         myfont.drawString(to_string(currentFrameIndex3), 3*204.,ofGetHeight()/2.);
         myfont.drawString(to_string(currentFrameIndex2), 2.*204,ofGetHeight()/2.);
         myfont.drawString(to_string(currentFrameIndex1), 204 ,ofGetHeight()/2.);
+        */
         ofPushStyle();
         ofNoFill();
         ofSetColor(0,255.,0);
         if(videoSelect==1){
-          ofDrawRectangle(posX, posY, w, h);
+            ofDrawRectangle(posX, posY, w, h);
         }else  if(videoSelect==2){
             ofDrawRectangle(posX+w+gap, posY, w, h);
-          }else  if(videoSelect==3){
+        }else  if(videoSelect==3){
             ofDrawRectangle(posX+w*2.+gap*2., posY, w, h);
-         }
+        }
         ofPopStyle();
     }else mascara.draw(0,0);
 }
@@ -100,11 +127,11 @@ void ofApp::keyPressed(int key){
     if( key == OF_KEY_BACKSPACE || key == OF_KEY_RETURN) showDebug= !showDebug;
 
     if (key == '0') {
-      //  direction1 *= -1;
-    videoSelect=0;
+        //  direction1 *= -1;
+        videoSelect=0;
     }
     if (key == '1') {
-    videoSelect=1;
+        videoSelect=1;
     }
     if (key == '2') {
         videoSelect=2;
@@ -150,6 +177,66 @@ void ofApp::keyPressed(int key){
 
     }
 
+    //quizas no sea lo mas optimo pero me parecio mas prolijo que un select en cada tecla
+    int  bias,amp;
+    float vel,peso;
+    float velD, umbral;
+    if(videoSelect==1){
+        vel=vel1, bias=bias1, amp=amp1, peso=peso1, velD=velD1, umbral=umbral1;
+    }else if(videoSelect==2){
+        vel=vel2, bias=bias2, amp=amp2, peso=peso2, velD=velD2, umbral=umbral2;
+    }else if(videoSelect==3){
+        vel=vel3; bias=bias3, amp=amp3, peso=peso3, velD=velD3, umbral=umbral3;
+    }
+    if (key =='T' || key =='t') {
+        bias++;
+    }
+    if (key =='g' || key =='g') {
+        bias--;
+    }
+    if (key =='Y' || key =='y') {
+        amp++;
+    }
+    if (key =='H' || key =='h') {
+        amp--;
+    }
+    if (key =='U' || key =='u') {
+        vel+=0.0005;
+    }
+    if (key =='J' || key =='j') {
+        vel-=0.0005;
+    }
+
+    if (key =='I' || key =='i') {
+        peso+=0.05;
+    }
+    if (key =='K' || key =='k') {
+        peso-=0.05;
+    }
+    if(peso>1.f)peso=1.0f; if(peso<0.f)peso=0.05f;
+
+    if (key =='O' || key =='o') {
+        velD+=0.0005;
+    }
+    if (key =='L' || key =='l') {
+        velD-=0.0005;
+    }
+
+    if (key =='n' || key =='N') {
+        umbral+=0.05;
+    }
+    if (key =='m' || key =='M') {
+        umbral-=0.05;
+    }
+    if(umbral>1.f)umbral=1.0f; if(umbral<0.f)umbral=.05f;
+
+    if(videoSelect==1){
+        vel1=vel, bias1=bias, amp1=amp, peso1=peso, velD1=velD, umbral1=umbral;
+    }else if(videoSelect==2){
+        vel2=vel, bias2=bias, amp2=amp, peso2=peso, velD2=velD, umbral2=umbral;
+    }else if(videoSelect==3){
+        vel3=vel; bias3=bias, amp3=amp, peso3=peso, velD3=velD, umbral3=umbral;
+    }
 
     ofLog()<<"posX: "<<posX<<endl;
     ofLog()<<"posY: "<<posY<<endl;
@@ -158,6 +245,13 @@ void ofApp::keyPressed(int key){
     ofLog()<<"w: "<<w<<endl;
     ofLog()<<"h: "<<h<<endl;
     ofLog()<<"videoSelect: "<<videoSelect<<endl;
+    ofLog()<<"bias: "<<bias<<endl;
+    ofLog()<<"amp: "<<amp<<endl;
+    ofLog()<<"vel: "<<vel<<endl;
+    ofLog()<<"peso: "<<peso<<endl;
+    ofLog()<<"velD: "<<velD<<endl;
+    ofLog()<<"umbral: "<<umbral<<endl;
+
     saveSettingsToXML("settings.xml");
 
 
