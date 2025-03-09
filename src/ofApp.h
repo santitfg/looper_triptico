@@ -35,11 +35,14 @@ public:
     float gap = 104;//distancia entre imgs
     float h, w;
 
+    ofTrueTypeFont tipo;
+    int tamTipo =14;
+    int posTxtX=10, posTxtY=10, gapTxt;
     int videoSelect=0;
     //config direcccion;
     float velD1=0.001, velD2=0.001, velD3=0.001 ; //velocidad para cambios de direccion
     float umbral1=0.5, umbral2=0.5, umbral3=0.5;
-
+    float velAcc1=0.005,velAcc2=0.005,velAcc3=0.005;
     float vel1=0.001, vel2=0.001 ,vel3=0.001;
     int bias1= 42,bias2= 42 ,bias3 = 42;
     int amp1=30,amp2=30,amp3=30;
@@ -55,6 +58,7 @@ public:
     ofTrueTypeFont myfont;
 
     bool showDebug = false;
+
     void freeImages(ofImage*& images, int numImages);
 
     void loadImagesFromFolder(const string& folderPath, ofImage*& images, int& numImages){
@@ -93,6 +97,10 @@ public:
         xml.pushTag("settings");
 
         // Agregar los valores como etiquetas
+        xml.addValue("tamTipo", tamTipo);
+        xml.addValue("posTxtX", posTxtX);
+        xml.addValue("posTxtY", posTxtY);
+        xml.addValue("gapTxt", gapTxt);
         xml.addValue("scale", scale);
         xml.addValue("posX", posX);
         xml.addValue("posY", posY);
@@ -102,6 +110,7 @@ public:
 
         //vel 1
         xml.addValue("vel1", vel1);
+        xml.addValue("velAcc1", velAcc1);
         xml.addValue("bias1", bias1);
         xml.addValue("amp1", amp1);
         xml.addValue("peso1", peso1);
@@ -109,6 +118,7 @@ public:
         xml.addValue("umbral1", umbral1);
         //vel 2
         xml.addValue("vel2", vel2);
+        xml.addValue("velAcc2", velAcc2);
         xml.addValue("bias2", bias2);
         xml.addValue("amp2", amp2);
         xml.addValue("peso2", peso2);
@@ -116,6 +126,7 @@ public:
         xml.addValue("umbral2", umbral2);
         //vel 3
         xml.addValue("vel3", vel3);
+        xml.addValue("velAcc3", velAcc3);
         xml.addValue("bias3", bias3);
         xml.addValue("amp3", amp3);
         xml.addValue("peso3", peso3);
@@ -138,8 +149,11 @@ public:
             // Moverse al nodo raíz "settings"
             if (xml.tagExists("settings")) {
                 xml.pushTag("settings");
+                tamTipo= xml.getValue("tamTipo", 14);
+                gapTxt= xml.getValue("gapTxt", 150);
+                posTxtX= xml.getValue("posTxtX", 32);
+                posTxtY= xml.getValue("posTxtY", 32);
 
-                // Leer los valores y asignarlos a las variables globales
                 scale = xml.getValue("scale", 1.0); // Valor por defecto 1.0
                 posX = xml.getValue("posX", 118.0); // Valor por defecto 118.0
                 posY = xml.getValue("posY", 105.0); // Valor por defecto 105.0
@@ -191,9 +205,9 @@ public:
         direction2= (ofNoise(td2)>=umbral2) ?1:-1;
         direction3= (ofNoise(td3)>=umbral3) ?1:-1;
 
-        float t1 =ofGetElapsedTimeMillis()*vel1;
-        float t2 =ofGetElapsedTimeMillis()*vel2;
-        float t3 =ofGetElapsedTimeMillis()*vel3;
+        float t1 =ofGetElapsedTimeMillis()*(vel1+ofNoise(ofGetElapsedTimeMillis()*velAcc1));
+        float t2 =ofGetElapsedTimeMillis()*(vel2+ofNoise(ofGetElapsedTimeMillis()*velAcc2));
+        float t3 =ofGetElapsedTimeMillis()*(vel3+ofNoise(ofGetElapsedTimeMillis()*velAcc3));
 
         frameDuration1 = ((sin(t1 )*0.5+0.5)*peso1 + (1.0-peso1)*ofNoise(t1))*amp1+bias1;
         frameDuration2 = ((sin(t2 )*0.5+0.5)*peso2 + (1.0-peso2)*ofNoise(t2))*amp2+bias2;
