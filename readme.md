@@ -32,5 +32,7 @@ o l : vel de cambio de direccion ( controlado via ruido)
 
 n m : vel del umbral de cambio de direccion 
 
+z x : vel de noise modulador de velocidad en el frame rate
+
 TODO: version de baja memoria, que levante solamente n° frames en memoria y en vez de todo el disco
 * version 2 que pueda hacer imgs desde un video con la misma logica del de baja mem.
