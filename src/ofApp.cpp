@@ -31,6 +31,7 @@ void ofApp::setup(){
     loadSettingsFromXML("settings.xml");
     tipo.load("future-earth.ttf", tamTipo);
 
+    ofHideCursor();
 }
 
 //--------------------------------------------------------------
@@ -125,7 +126,7 @@ void ofApp::draw(){
         mascara.draw(0,0);
         ofPushMatrix();
 
-
+         ofTranslate( ofGetWidth()/2.0,ofGetHeight()/2.0);
         // Rotar 90 grados para dibujar el texto en vertical
         ofRotateDeg(270);
 

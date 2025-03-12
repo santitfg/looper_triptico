@@ -18,7 +18,7 @@ Project{
         ]
 
         of.addons: [
-            'ofxOsc'
+            'ofxXmlSettings',
         ]
 
         // additional flags for the project. the of module sets some
